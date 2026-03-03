@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
-  let currentDifficulty = "all";
+  let currentDifficulty = "";
 
   // Authentication state
   let currentUser = null;
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Handle difficulty filter - only add to query if a specific level is selected
       // "All" means no difficulty parameter, then client-side filters to show only activities without difficulty
-      if (currentDifficulty && currentDifficulty !== "" && currentDifficulty !== "all") {
+      if (currentDifficulty && currentDifficulty !== "") {
         queryParams.push(`difficulty=${encodeURIComponent(currentDifficulty)}`);
       }
 
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Apply difficulty filter for "All" option (show only activities without difficulty)
-      if ((currentDifficulty === "all" || currentDifficulty === "") && details.difficulty) {
+      if (currentDifficulty === "" && details.difficulty) {
         return;
       }
 
@@ -524,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <span class="difficulty-badge difficulty-${details.difficulty.toLowerCase()}">
         ${details.difficulty}
       </span>
-    ` : '';
+    ` : "";
 
     // Create capacity indicator
     const capacityIndicator = `
@@ -670,8 +670,8 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("active");
 
       // Update current difficulty filter and fetch activities
-      // Empty string from data-difficulty means "all"
-      currentDifficulty = button.dataset.difficulty || "all";
+      // Empty string from data-difficulty means "all" (no difficulty specified)
+      currentDifficulty = button.dataset.difficulty || "";
       fetchActivities();
     });
   });
