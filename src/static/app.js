@@ -555,16 +555,16 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="share-section">
         <div class="share-label">Share this activity:</div>
         <div class="share-buttons">
-          <button class="share-button share-twitter" data-activity="${name}" aria-label="Share on Twitter">
+          <button class="share-button share-twitter" data-activity="${name}" aria-label="Share ${name} on Twitter">
             <span class="share-icon">𝕏</span>
           </button>
-          <button class="share-button share-facebook" data-activity="${name}" aria-label="Share on Facebook">
+          <button class="share-button share-facebook" data-activity="${name}" aria-label="Share ${name} on Facebook">
             <span class="share-icon">f</span>
           </button>
-          <button class="share-button share-linkedin" data-activity="${name}" aria-label="Share on LinkedIn">
+          <button class="share-button share-linkedin" data-activity="${name}" aria-label="Share ${name} on LinkedIn">
             <span class="share-icon">in</span>
           </button>
-          <button class="share-button share-email" data-activity="${name}" aria-label="Share via Email">
+          <button class="share-button share-email" data-activity="${name}" aria-label="Share ${name} via Email">
             <span class="share-icon">✉</span>
           </button>
         </div>
@@ -626,15 +626,28 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleShare(activityName, details, platform) {
     // Prepare the share content
     const pageUrl = window.location.href;
-    const shareText = `Check out ${activityName} at Mergington High School! ${details.description} Schedule: ${details.schedule}`;
+    
+    // Create share text with truncation for social media character limits
+    let shareText = `Check out ${activityName} at Mergington High School! ${details.description}`;
+    
+    // Truncate for Twitter if needed (leaving room for URL)
+    if (platform === "twitter") {
+      const maxLength = 240; // Leave room for URL and spacing
+      if (shareText.length > maxLength) {
+        shareText = shareText.substring(0, maxLength - 3) + "...";
+      }
+    }
+    
+    // Add schedule for email (which has no length limit)
+    const shareTextWithSchedule = `${shareText} Schedule: ${details.schedule}`;
     const shareTitle = `${activityName} - Mergington High School Activities`;
     
     // Create share URLs for different platforms
     const shareUrls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareTextWithSchedule)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`,
-      email: `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareText + "\n\n" + pageUrl)}`
+      email: `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareTextWithSchedule + "\n\n" + pageUrl)}`
     };
     
     // Open share URL
