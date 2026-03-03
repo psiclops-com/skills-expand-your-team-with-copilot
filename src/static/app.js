@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Dark mode elements
   const darkModeToggle = document.getElementById("dark-mode-toggle");
-  const toggleIcon = darkModeToggle.querySelector(".toggle-icon");
-  const toggleText = darkModeToggle.querySelector("span:last-child");
+  const toggleIcon = darkModeToggle ? darkModeToggle.querySelector(".toggle-icon") : null;
+  const toggleText = darkModeToggle ? darkModeToggle.querySelector("span:last-child") : null;
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -877,6 +877,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateDarkModeButton(isDarkMode) {
+    if (!toggleIcon || !toggleText) return;
+    
     if (isDarkMode) {
       toggleIcon.textContent = "☀️";
       toggleText.textContent = "Light";
@@ -899,7 +901,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Dark mode toggle event listener
-  darkModeToggle.addEventListener("click", toggleDarkMode);
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+  }
 
   // Initialize app
   initializeDarkMode();
